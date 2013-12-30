@@ -28,6 +28,18 @@ angular.module('fs', ['ngCookies', 'raml', 'utils'])
         return service.removeFile(this);
       },
 
+      saveMetadata: function (metadata) {
+        return service.saveFileMetadata(this, metadata);
+      },
+
+      loadMetadata: function () {
+        return service.loadFileMetadata(this);
+      },
+
+      saveMetadataKey: function (key, value) {
+        return service.saveFileMetadataKey(this, key, value);
+      },
+
       hasContents: function () {
         return !!this.contents;
       }
@@ -46,7 +58,7 @@ angular.module('fs', ['ngCookies', 'raml', 'utils'])
       return fileSystem.save(file.path, file.name, file.contents).then(
         // success
         function () {
-          file.dirty = false;
+          file.dirty     = false;
           file.persisted = true;
 
           return file;
@@ -65,7 +77,7 @@ angular.module('fs', ['ngCookies', 'raml', 'utils'])
       return fileSystem.load(file.path, file.name).then(
         // success
         function (data) {
-          file.dirty = false;
+          file.dirty     = false;
           file.persisted = true;
           file.contents  = data;
 
@@ -74,7 +86,7 @@ angular.module('fs', ['ngCookies', 'raml', 'utils'])
 
         // failure
         function (error) {
-          file.dirty = false;
+          file.dirty     = false;
           file.persisted = true;
           file.error     = error;
 
@@ -99,6 +111,18 @@ angular.module('fs', ['ngCookies', 'raml', 'utils'])
           throw error;
         }
       );
+    };
+
+    service.saveFileMetadata = function saveFileMetadata(file, metadata) {
+      return fileSystem.saveMetadata(file.path, file.name, metadata);
+    };
+
+    service.loadFileMetadata = function loadFileMetadata(file) {
+      return fileSystem.loadMetadata(file.path, file.name);
+    };
+
+    service.saveFileMetadataKey = function saveFileMetadataKey(file, key, value) {
+      return fileSystem.saveMetadataKey(file.path, file.name, key, value);
     };
 
     service.createFile = function () {
